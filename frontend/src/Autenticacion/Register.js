@@ -1,15 +1,22 @@
-import "../../src/App.css";
-import { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-
+import "../../src/styles/auth.css";
 function Register() {
   const navigate = useNavigate();
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
+  // Función de efecto para restablecer el estado al montar el componente
+  useEffect(() => {
+    // Restablecer los valores de los campos a una cadena vacía
+    setName("");
+    setEmail("");
+    setPassword("");
+  }, []);
+
   async function registerUser(event) {
-    event.preventDefault(); //Esperar una acción
+    event.preventDefault(); // Esperar una acción
     const response = await fetch("http://localhost:1337/api/register", {
       method: "POST",
       headers: {

@@ -1,6 +1,5 @@
 import React from "react";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
-
 import Login from "./Autenticacion/Login";
 import Register from "./Autenticacion/Register";
 import Panel from "./Task/Panel";
