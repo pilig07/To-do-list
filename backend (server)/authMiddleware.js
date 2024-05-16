@@ -1,3 +1,5 @@
+//FUNCIÓN PARA QUE EXPRESS PUEDA VERIFICAR EL TOKEN CON LA PALABRA ENCRIPTADA
+
 const jwt = require("jsonwebtoken");
 
 function verifyToken(req, res, next) {

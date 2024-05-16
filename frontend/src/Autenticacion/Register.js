@@ -31,28 +31,45 @@ function Register() {
 
   return (
     <div>
-      <h1>Registrate</h1>
-      <form onSubmit={registerUser}>
-        <input
-          type="text"
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-          placeholder="Nombre"
-        ></input>
-        <input
-          type="email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          placeholder="Correo electrónico"
-        ></input>
-        <input
-          type="password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          placeholder="Contraseña"
-        ></input>
-        <button type="submit">Registrarse</button>
+      <h1 className="title">Registrate</h1>
+      <form onSubmit={registerUser} className="login-form">
+        <div className="flex-row">
+          <input
+            type="text"
+            className="lf--input"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            placeholder="Nombre"
+          ></input>
+        </div>
+        <div className="flex-row">
+          <input
+            type="email"
+            value={email}
+            className="lf--input"
+            onChange={(e) => setEmail(e.target.value)}
+            placeholder="Correo electrónico"
+          ></input>
+        </div>
+        <div className="flex-row">
+          <input
+            type="password"
+            value={password}
+            className="lf--input"
+            onChange={(e) => setPassword(e.target.value)}
+            placeholder="Contraseña"
+          ></input>
+        </div>
+
+        <button className="lf--submit" type="submit">
+          Registrarse
+        </button>
       </form>
+      <h1 className="lf--forgot">
+        <a className="lf--forgot" href="/login">
+          ¿Ya tienes cuenta? Inicia sesión!
+        </a>
+      </h1>
     </div>
   );
 }
