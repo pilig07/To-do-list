@@ -3,13 +3,14 @@ const app = express();
 const cors = require("cors");
 const mongoose = require("mongoose");
 const User = require("./models/user_model");
-const jwt = require("jsonwebtoken"); //JSON WEB TOKENS
+const jwt = require("jsonwebtoken"); // JSON WEB TOKENS
+const bcrypt = require("bcrypt"); // Para el hash de contraseñas
+const verifyToken = require("./authMiddleware");
 
 app.use(cors());
-app.use(express.json()); //Convertir todo lo recibido en Json
+app.use(express.json()); // Convertir todo lo recibido en JSON
 
-//Iniciar conexión con MongoBD (por default al iniciar el launcher inicia con puerto 2701)
-
+// Iniciar conexión con MongoDB
 mongoose
   .connect("mongodb://127.0.0.1:27017/to-do")
   .then(() => {
@@ -19,40 +20,88 @@ mongoose
     console.error("Error de conexión a MongoDB:", error);
   });
 
-//Registro de usuario
+// Registro de usuario
 app.post("/api/register", async (req, res) => {
   try {
-    const user = await User.create({
-      name: req.body.name,
-      email: req.body.email,
-      password: req.body.password,
+    const { name, email, password } = req.body;
+
+    // Verificar si el usuario ya existe
+    const existingUser = await User.findOne({ email });
+    if (existingUser) {
+      return res
+        .status(400)
+        .json({ status: "error", message: "Correo electrónico ya en uso" });
+    }
+
+    // Hash de la contraseña
+    const hashedPassword = await bcrypt.hash(password, 10);
+
+    // Crear nuevo usuario
+    await User.create({
+      name,
+      email,
+      password: hashedPassword,
     });
+
     res.json({ status: "ok" });
-  } catch (e) {
-    console.log(e);
-    res.json({ status: "error", error: "Correo electrónico ya en uso" });
+  } catch (error) {
+    console.error(error);
+    res
+      .status(500)
+      .json({ status: "error", error: "Error interno del servidor" });
   }
 });
 
-//Logeo de usuario
+// Login de usuario
 app.post("/api/login", async (req, res) => {
-  const user = await User.findOne({
-    email: req.body.email,
-    password: req.body.password,
+  const { email, password } = req.body;
+
+  console.log(email);
+  console.log(password);
+  // Buscar usuario por correo electrónico
+  const user = await User.findOne({ email });
+  if (!user) {
+    return res
+      .status(401)
+      .json({ status: "error", message: "Credenciales inválidas" });
+  }
+
+  // Verificar contraseña
+  const passwordMatch = await bcrypt.compare(password, user.password);
+  if (!passwordMatch) {
+    return res
+      .status(401)
+      .json({ status: "error", message: "Credenciales inválidas" });
+  }
+
+  // Generar token JWT
+  const token = jwt.sign({ email: user.email }, "secret123", {
+    expiresIn: "1h",
   });
 
-  if (user) {
-    //Encriptación base 64 de los datos del usuario
-    const token = jwt.sign(
-      {
-        name: user.name,
-        email: user.email,
-      },
-      "secret123"
-    );
-    return res.json({ status: "ok", user: token });
-  } else {
-    return res.json({ status: "error", user: false });
+  res.json({ status: "ok", token });
+});
+
+// Ruta protegida
+app.get("/api/panel", verifyToken, async (req, res) => {
+  try {
+    // Obtener datos del usuario desde el token decodificado
+    const userEmail = req.userEmail;
+    const user = await User.findOne({ email: userEmail });
+
+    if (!user) {
+      return res
+        .status(404)
+        .json({ status: "error", message: "Usuario no encontrado" });
+    }
+
+    // Devolver datos del usuario
+    res.json({ status: "ok", user: { name: user.name, email: user.email } });
+  } catch (error) {
+    console.error(error);
+    res
+      .status(500)
+      .json({ status: "error", error: "Error interno del servidor" });
   }
 });
 
