@@ -25,8 +25,6 @@ function Insertar() {
       }),
     });
     const data = await response.json();
-
-    console.log("Server response:", data);
   };
 
   return (

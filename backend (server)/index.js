@@ -58,9 +58,6 @@ app.post("/api/register", async (req, res) => {
 // Login de usuario
 app.post("/api/login", async (req, res) => {
   const { email, password } = req.body;
-
-  console.log(email);
-  console.log(password);
   // Buscar usuario por correo electrónico
   const user = await User.findOne({ email });
   if (!user) {
@@ -147,7 +144,7 @@ app.put("/api/edittask/:id", async (req, res) => {
   }
 });
 
-// Eliminar task
+// Eliminar tarea
 app.delete("/api/task/:id", async (req, res) => {
   try {
     const { id } = req.params;

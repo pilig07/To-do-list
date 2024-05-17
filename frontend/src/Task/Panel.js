@@ -4,7 +4,7 @@ import "../../src/styles/panel.css";
 import Insertar from "./Componentes/Insertar";
 
 //ICONOS
-import { GoDot } from "react-icons/go";
+import { MdOutlineModeEdit } from "react-icons/md";
 import { TiDeleteOutline } from "react-icons/ti";
 import { GrStatusGood } from "react-icons/gr";
 
@@ -26,7 +26,7 @@ function Panel() {
         },
       });
       const userData = await userDataResponse.json();
-      console.log(userData.user); // Agregar esta línea
+
       if (userData.status === "ok") {
         setUser(userData.user);
 
@@ -136,18 +136,18 @@ function Panel() {
         </div>
       </nav>
       <div className="todo-list container">
-        <h2>To-do List</h2>
+        <h2 className="sign">To-do List</h2>
         <Insertar />
         <br />
         {lista.length === 0 ? (
           <div>
-            <h2>No hay tareas pendientes</h2>
+            <h2 className="sign">No hay tareas pendientes</h2>
           </div>
         ) : (
           lista.map((item) => (
             <div key={item._id} className={`task ${item.done ? "done" : ""}`}>
               <div
-               className={`checkbox ${item.done ? "done" : ""}`}
+                className={`checkbox ${item.done ? "done" : ""}`}
                 onClick={() => {
                   const newTask = prompt("Edita la tarea:", item.task);
                   if (newTask) {
@@ -155,7 +155,7 @@ function Panel() {
                   }
                 }}
               >
-                <GoDot className="icon" />
+                <MdOutlineModeEdit className="icon" />
                 <p>{item.task}</p>
               </div>
               <div className="icons">

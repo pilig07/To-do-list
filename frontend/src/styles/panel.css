@@ -8,9 +8,15 @@
 nav {
   z-index: 99;
   width: 100%;
-  background: #242526;
+  background: #6fa5c4;
 }
-
+.sign {
+  padding-top: 40px;
+  color: #8c55aa;
+  font-weight: bold;
+  font-size: 23px;
+  text-align: center;
+}
 nav .wrapper {
   position: relative;
   max-width: 1300px;
@@ -205,17 +211,17 @@ nav .wrapper {
 .task div .icon {
   cursor: pointer;
 }
-.icons{
-  display:flex;
+.icons {
+  display: flex;
   justify-content: space-between;
   align-items: center;
 }
 
 .task.done {
-  background-color: #228b22; 
+  background-color: #228b22;
 }
 
 .task .checkbox.done p {
   text-decoration: line-through;
-  color: #155724; 
+  color: #155724;
 }

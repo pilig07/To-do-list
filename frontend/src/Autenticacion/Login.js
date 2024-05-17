@@ -10,9 +10,6 @@ function Login() {
   async function loginUser(event) {
     event.preventDefault();
 
-    // Debugging: Verificar datos antes de enviarlos
-    console.log("Logging in with:", { email, password });
-
     const response = await fetch("http://localhost:1337/api/login", {
       method: "POST",
       headers: {
@@ -39,34 +36,35 @@ function Login() {
   }
 
   return (
-    <div>
-      <h1 className="title">Iniciar sesión</h1>
-      <form onSubmit={loginUser} className="login-form">
-        <div className="flex-row">
-          <input
-            className="lf--input"
-            type="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            placeholder="Correo electrónico"
-          />
+    <div className="main">
+      <h1 className="sign">Iniciar sesión</h1>
+      <form onSubmit={loginUser} className="form1">
+        <input
+          className="un"
+          type="email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          placeholder="Correo electrónico"
+        />
+
+        <input
+          type="password"
+          className="un"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          placeholder="Contraseña"
+        />
+        <div class="form-container">
+          <button type="submit" className="submit">
+            Iniciar sesión
+          </button>
         </div>
-        <div className="flex-row">
-          <input
-            type="password"
-            className="lf--input"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            placeholder="Contraseña"
-          />
-        </div>
-        <button type="submit" className="lf--submit">
-          Iniciar sesión
-        </button>
       </form>
-      <h1 className="lf--forgot"><a className="lf--forgot" href="/register">
-        ¿No tienes cuenta? Registrate!
-      </a></h1>
+      <h1 className="forgot">
+        <a className="forgot" href="/register">
+          ¿No tienes cuenta? Registrate!
+        </a>
+      </h1>
     </div>
   );
 }
