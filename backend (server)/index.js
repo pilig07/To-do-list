@@ -125,6 +125,46 @@ app.get("/api/lista", async (req, res) => {
     .catch((err) => res.json(err));
 });
 
+//Editar tarea
+app.put("/api/edittask/:id", async (req, res) => {
+  const { id } = req.params;
+  const { task } = req.body;
+
+  try {
+    const updatedTask = await Task.findByIdAndUpdate(
+      id,
+      { task },
+      { new: true }
+    );
+    res.json({ status: "ok", task: updatedTask });
+  } catch (err) {
+    res.status(500).json({ status: "error", error: err.message });
+  }
+});
+
+// Eliminar task
+app.delete("/api/task/:id", async (req, res) => {
+  try {
+    const { id } = req.params;
+    await Task.findByIdAndDelete(id);
+    res.json({ status: "ok" });
+  } catch (err) {
+    res.status(500).json({ status: "error", error: err.message });
+  }
+});
+
+// Marcar como hecha tarea
+app.put("/api/task/:id", async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { done } = req.body;
+    const task = await Task.findByIdAndUpdate(id, { done }, { new: true });
+    res.json({ status: "ok", task });
+  } catch (err) {
+    res.status(500).json({ status: "error", error: err.message });
+  }
+});
+
 app.listen(1337, () => {
   console.log("server running");
 });

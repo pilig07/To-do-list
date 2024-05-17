@@ -205,3 +205,17 @@ nav .wrapper {
 .task div .icon {
   cursor: pointer;
 }
+.icons{
+  display:flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.task.done {
+  background-color: #228b22; 
+}
+
+.task .checkbox.done p {
+  text-decoration: line-through;
+  color: #155724; 
+}
