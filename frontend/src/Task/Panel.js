@@ -2,35 +2,51 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "../../src/styles/panel.css";
 import Insertar from "./Componentes/Insertar";
+import { GoDot } from "react-icons/go";
+import { TiDeleteOutline } from "react-icons/ti";
 
 function Panel() {
   const [user, setUser] = useState(null);
   const navigate = useNavigate();
   const [lista, setLista] = useState([]);
   useEffect(() => {
-    async function fetchUserData() {
+    async function fetchData() {
       const token = localStorage.getItem("token");
 
-      const response = await fetch("http://localhost:1337/api/panel", {
+      // Obtener datos del usuario
+      const userDataResponse = await fetch("http://localhost:1337/api/panel", {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
           Authorization: token,
         },
       });
+      const userData = await userDataResponse.json();
 
-      const data = await response.json();
+      if (userData.status === "ok") {
+        setUser(userData.user);
 
-      if (data.status === "ok") {
-        setUser(data.user);
+        // Obtener lista de tareas pendientes
+        const taskListResponse = await fetch(
+          "http://localhost:1337/api/lista",
+          {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: token,
+            },
+          }
+        );
+        const taskListData = await taskListResponse.json();
+        setLista(taskListData);
       } else {
         alert("No autorizado");
         navigate("/login");
       }
     }
 
-    fetchUserData();
-  }, []);
+    fetchData();
+  }, [navigate]);
 
   if (!user) {
     return <div>Cargando...</div>;
@@ -40,7 +56,7 @@ function Panel() {
     navigate("/login"); // Redirigir al login
   };
 
- 
+  const EditTask = () => {};
   return (
     <div className="panel-container">
       <nav>
@@ -49,7 +65,7 @@ function Panel() {
             <a href="#">To-do List</a>
           </div>
           <ul className="nav-links">
-            <label for="close-btn" className="btn close-btn">
+            <label htmlFor="close-btn" className="btn close-btn">
               <i className="fas fa-times"></i>
             </label>
             <li>
@@ -61,15 +77,30 @@ function Panel() {
           </ul>
         </div>
       </nav>
-      <div className="todo-list">
+      <div className="todo-list container">
         <h2>To-do List</h2>
         <Insertar></Insertar>
+        <br></br>
         {lista.length === 0 ? (
           <div>
             <h2>No hay tareas pendientes</h2>
           </div>
         ) : (
-          lista.map((item) => <div>{item}</div>)
+          lista.map((item) => (
+            <div key={item._id} className="task">
+              <div className="checkbox" onClick={EditTask}>
+                <GoDot className="icon" />
+                <p>{item.task}</p>
+              </div>
+              <div>
+                {" "}
+                <span>
+                  {" "}
+                  <TiDeleteOutline className="icon" />
+                </span>
+              </div>
+            </div>
+          ))
         )}
       </div>
     </div>

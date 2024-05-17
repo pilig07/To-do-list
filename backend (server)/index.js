@@ -2,10 +2,13 @@ const express = require("express");
 const app = express();
 const cors = require("cors");
 const mongoose = require("mongoose");
-const User = require("./models/user_model");
 const jwt = require("jsonwebtoken"); // JSON WEB TOKENS
 const bcrypt = require("bcrypt"); // Para el hash de contraseñas
 const verifyToken = require("./authMiddleware");
+
+//MODELOS
+const User = require("./models/user_model");
+const Task = require("./models/task_model");
 
 app.use(cors());
 app.use(express.json()); // Convertir todo lo recibido en JSON
@@ -103,6 +106,23 @@ app.get("/api/panel", verifyToken, async (req, res) => {
       .status(500)
       .json({ status: "error", error: "Error interno del servidor" });
   }
+});
+
+// Añadir tarea
+app.post("/api/addtask", async (req, res) => {
+  const task = req.body.task;
+  Task.create({
+    task: task,
+  })
+    .then((result) => res.json(result))
+    .catch((err) => res.json(err));
+});
+
+//Lista de tareas
+app.get("/api/lista", async (req, res) => {
+  Task.find()
+    .then((result) => res.json(result))
+    .catch((err) => res.json(err));
 });
 
 app.listen(1337, () => {
