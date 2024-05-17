@@ -109,18 +109,23 @@ app.get("/api/panel", verifyToken, async (req, res) => {
 });
 
 // Añadir tarea
-app.post("/api/addtask", async (req, res) => {
-  const task = req.body.task;
+app.post("/api/addtask", verifyToken, async (req, res) => {
+  const { task } = req.body;
+  const userEmail = req.userEmail;
+
   Task.create({
     task: task,
+    userEmail: userEmail,
   })
     .then((result) => res.json(result))
     .catch((err) => res.json(err));
 });
 
 //Lista de tareas
-app.get("/api/lista", async (req, res) => {
-  Task.find()
+app.get("/api/lista", verifyToken, async (req, res) => {
+  const userEmail = req.userEmail;
+
+  Task.find({ userEmail: userEmail })
     .then((result) => res.json(result))
     .catch((err) => res.json(err));
 });

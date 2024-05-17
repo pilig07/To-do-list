@@ -4,6 +4,7 @@ const Task = new mongoose.Schema(
   {
     task: { type: String, required: true },
     done: { type: Boolean, required: true, default: false },
+    userEmail: { type: String, required: true }, 
   },
   { collection: "tasks" }
 );

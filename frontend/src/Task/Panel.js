@@ -26,7 +26,7 @@ function Panel() {
         },
       });
       const userData = await userDataResponse.json();
-
+      console.log(userData.user); // Agregar esta línea
       if (userData.status === "ok") {
         setUser(userData.user);
 

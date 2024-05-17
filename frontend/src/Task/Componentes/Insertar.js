@@ -1,15 +1,24 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import "../../styles/panel.css";
-import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 function Insertar() {
-  const [task, setTask] = useState();
+  const [task, setTask] = useState("");
+  const [userEmail, setUserEmail] = useState("");
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const userEmail = localStorage.getItem("userEmail");
+    setUserEmail(userEmail);
+  }, []);
+
   const AddTask = async () => {
+    const token = localStorage.getItem("token");
     const response = await fetch("http://localhost:1337/api/addtask", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
+        Authorization: token,
       },
       body: JSON.stringify({
         task: task,
@@ -17,7 +26,6 @@ function Insertar() {
     });
     const data = await response.json();
 
-    // Debugging: Verificar respuesta del servidor
     console.log("Server response:", data);
   };
 
@@ -26,9 +34,10 @@ function Insertar() {
       <form onSubmit={AddTask}>
         <input
           type="text"
+          value={task}
           onChange={(e) => setTask(e.target.value)}
           placeholder="Nueva tarea"
-        ></input>
+        />
         <button type="submit">Añadir</button>
       </form>
     </div>
